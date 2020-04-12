@@ -109,6 +109,12 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Перезагружаем RR
+	if h.cfg.Workers.DeveloperMode {
+		h.rr.Reset()
+
+	}
+
 	rsp, err := h.rr.Exec(p)
 	if err != nil {
 		h.handleError(w, r, err, start)

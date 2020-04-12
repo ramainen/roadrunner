@@ -21,6 +21,8 @@ type ServerConfig struct {
 	// Command includes command strings with all the parameters, example: "php worker.php pipes".
 	Command string
 
+	DeveloperMode bool
+
 	// CommandProducer overwrites
 	CommandProducer CommandProducer
 
@@ -45,6 +47,8 @@ type ServerConfig struct {
 // InitDefaults sets missing values to their default values.
 func (cfg *ServerConfig) InitDefaults() error {
 	cfg.Relay = "pipes"
+	cfg.DeveloperMode = false
+	
 	cfg.RelayTimeout = time.Minute
 
 	if cfg.Pool == nil {
