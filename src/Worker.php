@@ -11,6 +11,7 @@ namespace Spiral\RoadRunner;
 
 use Spiral\Goridge\Exceptions\GoridgeException;
 use Spiral\Goridge\RelayInterface as Relay;
+use Spiral\Goridge\SendPackageRelayInterface;
 use Spiral\RoadRunner\Exception\RoadRunnerException;
 
 /**
@@ -66,7 +67,7 @@ class Worker
         }
 
         if ($flags & Relay::PAYLOAD_ERROR) {
-            return new \Error((string) $body);
+            return new \Error((string)$body);
         }
 
         return $body;
@@ -83,13 +84,22 @@ class Worker
      */
     public function send(string $payload = null, string $header = null): void
     {
-        if ($header === null) {
-            $this->relay->send('', Relay::PAYLOAD_CONTROL | Relay::PAYLOAD_NONE);
-        } else {
-            $this->relay->send($header, Relay::PAYLOAD_CONTROL | Relay::PAYLOAD_RAW);
-        }
+        if (!$this->relay instanceof SendPackageRelayInterface) {
+            if ($header === null) {
+                $this->relay->send('', Relay::PAYLOAD_CONTROL | Relay::PAYLOAD_NONE);
+            } else {
+                $this->relay->send($header, Relay::PAYLOAD_CONTROL | Relay::PAYLOAD_RAW);
+            }
 
-        $this->relay->send((string) $payload, Relay::PAYLOAD_RAW);
+            $this->relay->send((string)$payload, Relay::PAYLOAD_RAW);
+        } else {
+            $this->relay->sendPackage(
+                (string)$header,
+                Relay::PAYLOAD_CONTROL | ($header === null ? Relay::PAYLOAD_NONE : Relay::PAYLOAD_RAW),
+                (string)$payload,
+                Relay::PAYLOAD_RAW
+            );
+        }
     }
 
     /**
@@ -137,7 +147,7 @@ class Worker
     private function handleControl(string $body = null, &$header = null, int $flags = 0): bool
     {
         $header = $body;
-        if (is_null($body) || $flags & Relay::PAYLOAD_RAW) {
+        if ($body === null || $flags & Relay::PAYLOAD_RAW) {
             // empty or raw prefix
             return true;
         }

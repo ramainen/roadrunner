@@ -1,6 +1,38 @@
 CHANGELOG
 =========
 
+v1.8.2 (06.06.2020)
+-------------------
+- Bugfix release
+
+v1.8.1 (23.05.2020)
+-------------------
+- Update goridge version to 2.4.4
+- Fix code warnings from phpstan
+- Improve RPC
+- Create templates for the Bug reporting and Feature requests
+- Move docker images from golang-alpine to regular golang images
+- Add support for the CloudFlare CF-Connecting-IP and True-Client-IP headers (thanks @vsychov)
+- Add support for the Root CA via the `rootCa` .rr.yaml option
+- See the full milestone here: [link](https://github.com/spiral/roadrunner/milestone/11?closed=1)
+
+v1.8.0 (05.05.2020)
+-------------------
+- Update goridge version to 2.4.0
+- Update PHP version to the 7.2 (currently minimum supported)
+- See the full milestone here: [link](https://github.com/spiral/roadrunner/milestone/10?closed=1)
+
+v1.7.1 (22.04.2020)
+-------------------
+- Syscall usage optimized. Now the data is packing and sending via 1 (or 2 in some cases) send_socket calls, instead of 2-3 (by @vvval)
+- Unix sockets in Windows (AF_UNIX) now supported.
+- Systemd unit file now in the root of the repository. Feel free to read the [docs](https://roadrunner.dev/docs/beep-beep-systemd) about running RR as daemon on Linux based systems.
+- Added ability to run the worker process from the particular user on Linux-based systems. Make sure, that the user have the permissions to run the script. See the [config](https://roadrunner.dev/docs/intro-config), option `user`.
+- Fixed: vendor directory conflict with golang part of the application. Now php uses vendor_php directory for the dependencies.
+- Goridge updated to version 2.3.2.
+- Deprecated Zend dependency replaced with Laminas-diactoros.
+- See the full log: [Milestone](https://github.com/spiral/roadrunner/milestone/9?closed=1)
+
 v1.7.0 (23.03.2020)
 -------------------
 - Replaced std encoding/json package with the https://github.com/json-iterator/go
